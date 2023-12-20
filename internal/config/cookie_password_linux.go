@@ -1,7 +1,7 @@
 //go:build linux
 // +build linux
 
-package slackclient
+package config
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 	"r00t2.io/gosecret"
 )
 
-func cookiePassword() ([]byte, error) {
+func Password() ([]byte, error) {
 	service, err := gosecret.NewService()
 	if err != nil {
 		return nil, err

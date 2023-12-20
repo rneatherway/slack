@@ -7,19 +7,9 @@ package slackclient
 
 import "testing"
 
-func TestGetCookie(t *testing.T) {
-	cookie, err := getCookie()
-	if err != nil {
-		t.Error(err)
-	}
-
-	if cookie == "" {
-		t.Error("empty cookie")
-	}
-}
-
 func TestGetAuth(t *testing.T) {
-	auth, err := getSlackAuth("github")
+	// Replace <team> with the name of a team that you are logged into on this machine.
+	auth, err := GetAuth("<team>")
 	if err != nil {
 		t.Error(err)
 	}

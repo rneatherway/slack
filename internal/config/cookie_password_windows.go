@@ -1,7 +1,7 @@
 //go:build windows
 // +build windows
 
-package slackclient
+package config
 
 import (
 	"encoding/base64"
@@ -20,7 +20,7 @@ type LocalState struct {
 	OSCrypt EncryptedKey `json:"os_crypt"`
 }
 
-func cookiePassword() ([]byte, error) {
+func Password() ([]byte, error) {
 	bs, err := os.ReadFile(path.Join(slackConfigDir(), "Local State"))
 	if err != nil {
 		return nil, err

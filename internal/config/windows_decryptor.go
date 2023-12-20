@@ -1,4 +1,4 @@
-package slackclient
+package config
 
 import (
 	"crypto/aes"

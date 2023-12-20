@@ -1,7 +1,7 @@
 //go:build darwin
 // +build darwin
 
-package slackclient
+package config
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 	"github.com/keybase/go-keychain"
 )
 
-func cookiePassword() ([]byte, error) {
+func Password() ([]byte, error) {
 	accountNames := []string{"Slack Key", "Slack", "Slack App Store Key"}
 
 	var err error

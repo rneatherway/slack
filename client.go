@@ -12,11 +12,28 @@ import (
 
 type SlackClient struct {
 	team string
-	auth *SlackAuth
+	auth *Auth
+
+	httpClient *http.Client
+}
+
+func Null(roundTripper http.RoundTripper) *SlackClient {
+	return &SlackClient{
+		team: "test",
+		auth: &Auth{
+			Token: "test_token",
+			Cookies: map[string]string{
+				"test_cookie": "test_value",
+			},
+		},
+		httpClient: &http.Client{
+			Transport: roundTripper,
+		},
+	}
 }
 
 func New(team string) (*SlackClient, error) {
-	auth, err := getSlackAuth(team)
+	auth, err := GetAuth(team)
 	if err != nil {
 		return nil, err
 	}
@@ -24,6 +41,8 @@ func New(team string) (*SlackClient, error) {
 	c := &SlackClient{
 		team: team,
 		auth: auth,
+
+		httpClient: http.DefaultClient,
 	}
 
 	return c, nil
@@ -57,7 +76,7 @@ func (c *SlackClient) API(verb, path string, params map[string]string, body []by
 			req.AddCookie(&http.Cookie{Name: key, Value: c.auth.Cookies[key]})
 		}
 
-		resp, err := http.DefaultClient.Do(req)
+		resp, err := c.httpClient.Do(req)
 		if err != nil {
 			return nil, err
 		}

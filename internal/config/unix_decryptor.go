@@ -1,4 +1,4 @@
-package slackclient
+package config
 
 import (
 	"crypto/aes"
@@ -9,11 +9,11 @@ import (
 )
 
 type UnixCookieDecryptor struct {
-	rounds int
+	Rounds int
 }
 
 func (d UnixCookieDecryptor) Decrypt(value, key []byte) ([]byte, error) {
-	dk := pbkdf2.Key(key, []byte("saltysalt"), d.rounds, 16, sha1.New)
+	dk := pbkdf2.Key(key, []byte("saltysalt"), d.Rounds, 16, sha1.New)
 
 	block, err := aes.NewCipher(dk)
 	if err != nil {
