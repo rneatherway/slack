@@ -1,7 +1,8 @@
-package slackclient
+package slack
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,15 +11,15 @@ import (
 	"time"
 )
 
-type SlackClient struct {
+type Client struct {
 	team string
 	auth *Auth
 
 	httpClient *http.Client
 }
 
-func Null(roundTripper http.RoundTripper) *SlackClient {
-	return &SlackClient{
+func Null(roundTripper http.RoundTripper) *Client {
+	return &Client{
 		team: "test",
 		auth: &Auth{
 			Token: "test_token",
@@ -32,13 +33,13 @@ func Null(roundTripper http.RoundTripper) *SlackClient {
 	}
 }
 
-func New(team string) (*SlackClient, error) {
+func NewClient(team string) (*Client, error) {
 	auth, err := GetAuth(team)
 	if err != nil {
 		return nil, err
 	}
 
-	c := &SlackClient{
+	c := &Client{
 		team: team,
 		auth: auth,
 
@@ -48,7 +49,7 @@ func New(team string) (*SlackClient, error) {
 	return c, nil
 }
 
-func (c *SlackClient) API(verb, path string, params map[string]string, body []byte) ([]byte, error) {
+func (c *Client) API(ctx context.Context, verb, path string, params map[string]string, body []byte) ([]byte, error) {
 	u, err := url.Parse(fmt.Sprintf("https://%s.slack.com/api/", c.team))
 	if err != nil {
 		return nil, err
@@ -64,7 +65,7 @@ func (c *SlackClient) API(verb, path string, params map[string]string, body []by
 	var resBody []byte
 
 	for {
-		req, err := http.NewRequest(verb, u.String(), reqBody)
+		req, err := http.NewRequestWithContext(ctx, verb, u.String(), reqBody)
 		if err != nil {
 			return nil, err
 		}
