@@ -13,24 +13,9 @@ import (
 
 type Client struct {
 	team string
-	auth *Auth
+	auth Auth
 
 	httpClient *http.Client
-}
-
-func Null(roundTripper http.RoundTripper) *Client {
-	return &Client{
-		team: "test",
-		auth: &Auth{
-			Token: "test_token",
-			Cookies: map[string]string{
-				"test_cookie": "test_value",
-			},
-		},
-		httpClient: &http.Client{
-			Transport: roundTripper,
-		},
-	}
 }
 
 func NewClient(team string) *Client {
@@ -42,24 +27,16 @@ func NewClient(team string) *Client {
 
 func (c *Client) WithCookieAuth() error {
 	auth, err := GetCookieAuth(c.team)
-
 	if err != nil {
 		return err
 	}
 
-	c.auth = auth
+	c.auth = *auth
 	return nil
 }
 
-func (c *Client) WithTokenAuth(team string) error {
-	auth, err := GetTokenAuth(team)
-
-	if err != nil {
-		return err
-	}
-
-	c.auth = auth
-	return nil
+func (c *Client) WithTokenAuth(token string) {
+	c.auth = Auth{Token: token}
 }
 
 func (c *Client) WithHttpClient(httpClient *http.Client) {
