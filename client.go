@@ -33,20 +33,35 @@ func Null(roundTripper http.RoundTripper) *Client {
 	}
 }
 
-func NewClient(team string) (*Client, error) {
-	auth, err := GetAuth(team)
-	if err != nil {
-		return nil, err
-	}
-
-	c := &Client{
-		team: team,
-		auth: auth,
-
+func NewClient(team string) *Client {
+	return &Client{
+		team:       team,
 		httpClient: http.DefaultClient,
 	}
+}
 
-	return c, nil
+func (c *Client) WithCookieAuth() error {
+	auth, err := GetCookieAuth(c.team)
+
+	if err != nil {
+		return err
+	}
+
+	c.auth = auth
+	fmt.Printf("%+v\n", auth)
+	return nil
+}
+
+func (c *Client) WithTokenAuth(team string) error {
+	auth, err := GetTokenAuth(team)
+
+	if err != nil {
+		return err
+	}
+
+	c.auth = auth
+	fmt.Printf("%+v\n", auth)
+	return nil
 }
 
 func (c *Client) API(ctx context.Context, verb, path string, params map[string]string, body []byte) ([]byte, error) {
