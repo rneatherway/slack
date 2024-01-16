@@ -48,7 +48,6 @@ func (c *Client) WithCookieAuth() error {
 	}
 
 	c.auth = auth
-	fmt.Printf("%+v\n", auth)
 	return nil
 }
 
@@ -60,7 +59,6 @@ func (c *Client) WithTokenAuth(team string) error {
 	}
 
 	c.auth = auth
-	fmt.Printf("%+v\n", auth)
 	return nil
 }
 

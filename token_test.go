@@ -7,9 +7,9 @@ package slack
 
 import "testing"
 
-func TestGetAuth(t *testing.T) {
+func TestGetCookieAuth(t *testing.T) {
 	// Replace <team> with the name of a team that you are logged into on this machine.
-	auth, err := GetAuth("<team>")
+	auth, err := GetCookieAuth("<team>")
 	if err != nil {
 		t.Error(err)
 	}
