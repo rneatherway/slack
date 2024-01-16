@@ -18,7 +18,7 @@ type Auth struct {
 	Cookies map[string]string
 }
 
-func GetAuth(team string) (*Auth, error) {
+func GetCookieAuth(team string) (*Auth, error) {
 	cookie, err := config.GetCookie()
 	if err != nil {
 		return nil, err
@@ -51,4 +51,8 @@ func GetAuth(team string) (*Auth, error) {
 	}
 
 	return &Auth{Token: string(matches[1]), Cookies: map[string]string{"d": cookie}}, nil
+}
+
+func GetTokenAuth(token string) (*Auth, error) {
+	return &Auth{Token: token}, nil
 }
