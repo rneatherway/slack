@@ -49,6 +49,10 @@ func NewClient(team string) (*Client, error) {
 	return c, nil
 }
 
+func (c *Client) WithHttpClient(httpClient *http.Client) {
+	c.httpClient = httpClient
+}
+
 func (c *Client) API(ctx context.Context, verb, path string, params map[string]string, body []byte) ([]byte, error) {
 	u, err := url.Parse(fmt.Sprintf("https://%s.slack.com/api/", c.team))
 	if err != nil {
