@@ -39,7 +39,7 @@ func (c *Client) WithTokenAuth(token string) {
 	c.auth = Auth{Token: token}
 }
 
-func (c *Client) WithHttpClient(httpClient *http.Client) {
+func (c *Client) WithHTTPClient(httpClient *http.Client) {
 	c.httpClient = httpClient
 }
 
