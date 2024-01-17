@@ -1,4 +1,4 @@
-module github.com/rneatherway/slackclient
+module github.com/rneatherway/slack
 
 go 1.21
 

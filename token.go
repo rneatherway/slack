@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/rneatherway/slackclient/internal/config"
+	"github.com/rneatherway/slack/internal/config"
 	_ "modernc.org/sqlite"
 )
 
@@ -51,8 +51,4 @@ func GetCookieAuth(team string) (*Auth, error) {
 	}
 
 	return &Auth{Token: string(matches[1]), Cookies: map[string]string{"d": cookie}}, nil
-}
-
-func GetTokenAuth(token string) (*Auth, error) {
-	return &Auth{Token: token}, nil
 }
