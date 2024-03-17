@@ -26,6 +26,11 @@ func NewClient(team string) *Client {
 }
 
 func (c *Client) WithCookieAuth() error {
+	if auth, ok := TryGetEnvAuth(); ok {
+		c.auth = *auth
+		return nil
+	}
+
 	auth, err := GetCookieAuth(c.team)
 	if err != nil {
 		return err
