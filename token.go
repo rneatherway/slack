@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"os"
 	"regexp"
 
 	"github.com/rneatherway/slack/internal/config"
@@ -12,6 +14,11 @@ import (
 )
 
 var apiTokenRE = regexp.MustCompile("\"api_token\":\"([^\"]+)\"")
+
+const (
+	EnvSlackToken   = "SLACK_TOKEN"
+	EnvSlackCookies = "SLACK_COOKIES"
+)
 
 type Auth struct {
 	Token   string
@@ -51,4 +58,32 @@ func GetCookieAuth(team string) (*Auth, error) {
 	}
 
 	return &Auth{Token: string(matches[1]), Cookies: map[string]string{"d": cookie}}, nil
+}
+
+func TryGetEnvAuth() (*Auth, bool) {
+	if slackToken, ok := os.LookupEnv(EnvSlackToken); ok {
+		if slackCookies, ok := os.LookupEnv(EnvSlackCookies); ok {
+			vals, err := url.ParseQuery(slackCookies)
+			if err != nil {
+				return nil, false
+			}
+
+			cookies := make(map[string]string, len(vals))
+			for key, val := range vals {
+				if len(val) != 1 {
+					fmt.Fprintf(os.Stderr, "cookie %q has %d values: %q\n", key, len(val), val)
+					return nil, false
+				}
+
+				cookies[key] = val[0]
+			}
+
+			return &Auth{
+				Token:   slackToken,
+				Cookies: cookies,
+			}, true
+		}
+	}
+
+	return nil, false
 }
