@@ -102,39 +102,3 @@ func TestConvert(t *testing.T) {
 		}
 	}
 }
-
-func TestPrefixEachLine(t *testing.T) {
-	table := [][]string{
-		{"hi", "prefix: hi"},
-		{"hi\nhello", "prefix: hi\nprefix: hello"},
-		{"hi\nhello\nworld", "prefix: hi\nprefix: hello\nprefix: world"},
-	}
-
-	for _, test := range table {
-		input := test[0]
-		expected := test[1]
-		actual := PrefixEachLine("prefix: ", input)
-
-		if actual != expected {
-			t.Errorf("expected %q, actual %q", expected, actual)
-		}
-	}
-}
-
-func TestWrapInDetails(t *testing.T) {
-	table := [][]string{
-		{"hi", "<details>\n<summary>Details</summary>\n\nhi\n</details>"},
-		{"hi\nhello", "<details>\n<summary>Details</summary>\n\nhi\nhello\n</details>"},
-		{"hi\nhello\nworld", "<details>\n<summary>Details</summary>\n\nhi\nhello\nworld\n</details>"},
-	}
-
-	for _, test := range table {
-		input := test[0]
-		expected := test[1]
-		actual := WrapInDetails("Details", input)
-
-		if actual != expected {
-			t.Errorf("expected %q, actual %q", expected, actual)
-		}
-	}
-}

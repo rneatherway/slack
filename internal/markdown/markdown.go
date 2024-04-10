@@ -72,13 +72,3 @@ func Convert(client UserProvider, s string) (string, error) {
 
 	return text, nil
 }
-
-func PrefixEachLine(prefix, s string) string {
-	return prefix + strings.ReplaceAll(s, "\n", "\n"+prefix)
-}
-
-func WrapInDetails(summary, s string) string {
-	return fmt.Sprintf(
-		"<details>\n<summary>%s</summary>\n\n%s\n</details>",
-		summary, s)
-}
