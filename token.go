@@ -28,29 +28,34 @@ type Auth struct {
 func GetCookieAuth(team string) (*Auth, error) {
 	cookie, err := config.GetCookie()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error getting cookie: %w", err)
 	}
 
 	r, err := http.NewRequest("GET", fmt.Sprintf("https://%s.slack.com", team), nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 
+	fmt.Printf("cookie: %s\n", cookie)
 	r.AddCookie(&http.Cookie{Name: "d", Value: cookie})
 
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error sending request: %w", err)
 	}
 
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("status code %d", resp.StatusCode)
 	}
 
+	fmt.Printf("resp: %#v\n", resp)
+
 	bs, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error reading response body: %w", err)
 	}
+
+	// fmt.Printf("bs: %s\n", bs)
 
 	matches := apiTokenRE.FindSubmatch(bs)
 	if matches == nil {

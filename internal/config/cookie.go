@@ -62,6 +62,8 @@ func GetCookie() (string, error) {
 		return cookie, nil
 	}
 
+	fmt.Printf("encryptedValue: %v\n", encryptedValue)
+
 	// Remove the version number e.g. v11
 	encryptedValue = encryptedValue[3:]
 
