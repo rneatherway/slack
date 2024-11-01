@@ -78,5 +78,7 @@ func GetCookie() (string, error) {
 		return "", err
 	}
 
+	fmt.Printf("decryptedValue: %v\n", decryptedValue)
+
 	return string(decryptedValue), err
 }
