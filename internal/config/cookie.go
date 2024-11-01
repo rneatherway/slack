@@ -79,6 +79,7 @@ func GetCookie() (string, error) {
 	}
 
 	fmt.Printf("decryptedValue: %v\n", decryptedValue)
+	decryptedValue = decryptedValue[32:]
 
 	return string(decryptedValue), err
 }
