@@ -1,7 +1,6 @@
 package slack
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -43,18 +42,18 @@ func GetCookieAuth(team string) (*Auth, error) {
 		return nil, err
 	}
 
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("status code %d", resp.StatusCode)
-	}
+	// Note: here the resp.StatusCode is not checked for 200.
+	// Slack would sometimes send back a 403 with a valid token.
 
 	bs, err := io.ReadAll(resp.Body)
+	resp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
 	matches := apiTokenRE.FindSubmatch(bs)
 	if matches == nil {
-		return nil, errors.New("api token not found")
+		return nil, fmt.Errorf("api token not found, status code: %d", resp.StatusCode)
 	}
 
 	return &Auth{Token: string(matches[1]), Cookies: map[string]string{"d": cookie}}, nil
